@@ -8,7 +8,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 
-@Mod (modid = "nerfspawners", name = "Nerf Spawners", version = "0.3", acceptableRemoteVersions = "*")
+@Mod (modid = "nerfspawners", name = "Nerf Spawners", version = "0.4", acceptableRemoteVersions = "*")
 
 public class Main {
 	
@@ -16,6 +16,7 @@ public class Main {
 	public void initialize(FMLInitializationEvent event)
 	{
 		MinecraftForge.EVENT_BUS.register(new MobSpawnHandler());
+		MinecraftForge.EVENT_BUS.register(new BlockPlaceHandler());
 	}
 	
 	@EventHandler

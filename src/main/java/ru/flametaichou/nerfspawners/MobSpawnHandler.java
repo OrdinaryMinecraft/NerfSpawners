@@ -6,6 +6,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.world.BlockEvent;
 
 public class MobSpawnHandler {
 	
@@ -15,7 +16,7 @@ public class MobSpawnHandler {
 	public void onEntitySpawn(EntityJoinWorldEvent event) {
 		if (event.world.provider.dimensionId == ConfigHelper.worldID) {
 
-			int radius = ConfigHelper.radius;
+			int radius = ConfigHelper.spawnRadius;
 			int entity_x = (int) event.entity.posX;
 			int entity_y = (int) event.entity.posY;
 			int entity_z = (int) event.entity.posZ;
@@ -36,9 +37,16 @@ public class MobSpawnHandler {
 			
 			//if(!event.entity.getClass().equals(EntityPlayer.class)){
 			if(event.entity instanceof EntityCreature) {
+				if (ConfigHelper.debugMode) {
+					System.out.println("Spawning: " + event.entity.toString());
+				}
 	        	if (flag) {
-	        		if (random.nextDouble() > ConfigHelper.chanse)
-	        			event.setCanceled(true);
+	        		if (random.nextDouble() > ConfigHelper.chanse) {
+						if (ConfigHelper.debugMode) {
+							System.out.println("Cancel spawn: " + event.entity.toString());
+						}
+						event.setCanceled(true);
+					}
 	        	}
 			}
 		}
