@@ -37,10 +37,10 @@ public class MobSpawnHandler {
 			
 			//if(!event.entity.getClass().equals(EntityPlayer.class)){
 			if(event.entity instanceof EntityCreature) {
-				if (ConfigHelper.debugMode) {
-					System.out.println("Spawning: " + event.entity.toString());
-				}
 	        	if (flag) {
+					if (ConfigHelper.debugMode) {
+						System.out.println("Spawning: " + event.entity.toString());
+					}
 	        		if (random.nextDouble() > ConfigHelper.chanse) {
 						if (ConfigHelper.debugMode) {
 							System.out.println("Cancel spawn: " + event.entity.toString());
