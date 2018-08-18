@@ -38,9 +38,19 @@ public class MobSpawnHandler {
 			//if(!event.entity.getClass().equals(EntityPlayer.class)){
 			if(event.entity instanceof EntityCreature) {
 	        	if (flag) {
+					if (event.entity.getClass().getName().toLowerCase().contains("herobrine") ||
+							event.entity.getClass().getName().toLowerCase().contains("dragon") ||
+							event.entity.getClass().getName().toLowerCase().contains("wither") ||
+							event.entity.getClass().getName().toLowerCase().contains("golem")) {
+						System.out.println("Cancel spawn blacklist entity: " + event.entity.toString());
+						event.setCanceled(true);
+						return;
+					}
+
 					if (ConfigHelper.debugMode) {
 						System.out.println("Spawning: " + event.entity.toString());
 					}
+
 	        		if (random.nextDouble() > ConfigHelper.chanse) {
 						if (ConfigHelper.debugMode) {
 							System.out.println("Cancel spawn: " + event.entity.toString());
