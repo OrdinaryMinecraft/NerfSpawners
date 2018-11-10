@@ -2,6 +2,7 @@ package ru.flametaichou.nerfspawners;
 
 import java.util.Random;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
@@ -12,14 +13,14 @@ public class MobSpawnHandler {
 	
 	Random random = new Random();
 	
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onEntitySpawn(EntityJoinWorldEvent event) {
 		if (event.world.provider.dimensionId == ConfigHelper.worldID) {
 
 			int radius = ConfigHelper.spawnRadius;
-			int entity_x = (int) event.entity.posX;
-			int entity_y = (int) event.entity.posY;
-			int entity_z = (int) event.entity.posZ;
+			int entity_x = new Integer((int) event.entity.posX);
+			int entity_y = new Integer((int) event.entity.posY);
+			int entity_z = new Integer((int) event.entity.posZ);
 			
 			boolean flag = false;
 			for (int x = entity_x - radius; x <= entity_x + radius; x++) {
@@ -34,31 +35,40 @@ public class MobSpawnHandler {
 					}
 				}
 			}
-			
-			//if(!event.entity.getClass().equals(EntityPlayer.class)){
-			if(event.entity instanceof EntityCreature) {
+
+			if (event.entity instanceof EntityCreature) {
 	        	if (flag) {
-					if (event.entity.getClass().getName().toLowerCase().contains("herobrine") ||
-							event.entity.getClass().getName().toLowerCase().contains("dragon") ||
-							event.entity.getClass().getName().toLowerCase().contains("wither") ||
-							event.entity.getClass().getName().toLowerCase().contains("golem")) {
-						System.out.println("Cancel spawn blacklist entity: " + event.entity.toString());
+					if (!mobIsBlacklisted(event.entity.getClass().getName().toLowerCase())) {
+						if (ConfigHelper.debugMode) {
+							System.out.println("Cancel spawn blacklist entity: " + event.entity.toString());
+						}
+						event.world.onEntityRemoved(event.entity);
 						event.setCanceled(true);
 						return;
 					}
 
-					if (ConfigHelper.debugMode) {
-						System.out.println("Spawning: " + event.entity.toString());
-					}
+//					if (ConfigHelper.debugMode) {
+//						System.out.println("Spawning: " + event.entity.toString());
+//					}
 
 	        		if (random.nextDouble() > ConfigHelper.chanse) {
 						if (ConfigHelper.debugMode) {
 							System.out.println("Cancel spawn: " + event.entity.toString());
 						}
+						event.world.onEntityRemoved(event.entity);
 						event.setCanceled(true);
 					}
 	        	}
 			}
 		}
-	}	
+	}
+
+	private boolean mobIsBlacklisted(String mobName) {
+		for (String string : ConfigHelper.blacklistedMobNames) {
+			if (mobName.contains(string)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

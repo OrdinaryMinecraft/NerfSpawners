@@ -13,6 +13,7 @@ public class ConfigHelper {
 	
 	public static List<String> spawnersIdList;
 	public static List<String> spawnersToRemoveIdList;
+	public static List<String> blacklistedMobNames;
 	public static int spawnRadius;
 	public static int checkRadius;
 	public static double chanse;
@@ -29,6 +30,7 @@ public class ConfigHelper {
 			worldID = config.get("Settings", "worldID", 0).getInt(0);
 			spawnersIdList = Arrays.asList(config.getStringList("Settings", "SpawnersIdList", new String[]{"52","999"}, "ID's of blocks that spawning mobs."));
 			spawnersToRemoveIdList = Arrays.asList(config.getStringList("Settings", "SpawnersToRemoveIdList", new String[]{"999"}, "ID's of blocks which must be limited in checkRadius."));
+			blacklistedMobNames = Arrays.asList(config.getStringList("Settings", "BlacklistedMobNames", new String[]{"herobrine","dragon","wither","golem"}, "Names (or name parts) of blacklisted mobs that will not spawn never."));
 			
 		} catch(Exception e) {
 			System.out.println("A severe error has occured when attempting to load the config file for this mod!");
