@@ -1,23 +1,18 @@
 package ru.flametaichou.nerfspawners;
 
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
 public class MobSpawnHandler {
 	
 	Random random = new Random();
 	
-	@SubscribeEvent(priority = EventPriority.LOW)
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onEntitySpawn(EntityJoinWorldEvent event) {
 		if (event.world.isRemote) {
 			return;
