@@ -6,6 +6,7 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
 public class MobSpawnHandler {
@@ -42,6 +43,8 @@ public class MobSpawnHandler {
 
 				if (event.entity instanceof EntityCreature) {
 					if (flag) {
+						writeToEntityNBT((EntityCreature) event.entity);
+
 						boolean despawned = false;
 						if (mobIsBlacklisted(event.entity.getClass().getName().toLowerCase())) {
 							if (ConfigHelper.debugMode) {
@@ -67,6 +70,17 @@ public class MobSpawnHandler {
 				}
 			}
 		}
+	}
+
+	private void writeToEntityNBT(EntityCreature entity) {
+		NBTTagCompound data = new NBTTagCompound();
+		entity.writeToNBT(data);
+
+		NBTTagCompound forgeData = new NBTTagCompound();
+		forgeData.setBoolean("spawner", true);
+		data.setTag("ForgeData", forgeData);
+
+		entity.readFromNBT(data);
 	}
 
 	private boolean mobIsBlacklisted(String mobName) {
