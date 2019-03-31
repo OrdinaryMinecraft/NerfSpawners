@@ -3,13 +3,49 @@ package ru.flametaichou.nerfspawners;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+
+import java.util.Objects;
 
 
 public class BlockPlaceHandler {
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onDrops(LivingDropsEvent event) {
+        if (entityIsFromSpawner(event.entityLiving)) {
+            for (EntityItem item : event.drops) {
+                if (Math.random() > ConfigHelper.chanse) {
+                    try {
+                        item.setEntityItemStack(null);
+                        item.setDead();
+                    } catch (Exception e) {
+                        if (ConfigHelper.debugMode) {
+                            System.out.println("Error on removing item: " + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static boolean entityIsFromSpawner(Entity entity) {
+        NBTTagCompound data = new NBTTagCompound();
+        entity.writeToNBT(data);
+
+        NBTTagCompound forgeData = data.getCompoundTag("ForgeData");
+        if (Objects.nonNull(forgeData)) {
+            return forgeData.getBoolean("spawner");
+        }
+
+        return false;
+    }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onInteract(PlayerInteractEvent event) {
